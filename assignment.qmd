@@ -103,6 +103,9 @@ new_primary_dem_rep <- primary_dem_rep_clean %>%
 Write code to produce a `votes` column which is the result of adding together `early_votes`, `election_night_votes`, `provisional_votes` and the mail-in votes, overwriting your dataframe so that it now has that `total_votes` column permanently.
 
 ```{r}
+Q1_primary_dem_rep_clean <- primary_dem_rep_clean %>%
+  mutate(total_votes = early_votes + election_night_votes + provisional_votes + mail_in_ballot_1_votes + mail_in_ballot_2_votes)
+
 
 
 
@@ -110,10 +113,15 @@ Write code to produce a `votes` column which is the result of adding together `e
 
 Next, separately write code to show each county and precinct and calculate the total votes in the Governor's race - bearing in mind that each precinct will have multiple rows in the dataframe, but you only want to see one row for each precinct. (So you'll want to use grouping and summarizing.)
 
+group_by(county, precinct_voting_locations, office_name == "Governor / Lt. Governor") %>%
+  summarise(total_votes)
+
+
 ```{r}
 
-
-
+Q1B_primary_dem_rep_clean <- Q1_primary_dem_rep_clean %>%
+  group_by(county, precinct_voting_locations, office_name) %>%
+  summarise(total_votes)
 
 
 ```
@@ -127,8 +135,8 @@ Let's look at the average number of votes in each party's primary race for gover
 ```{r}
 
 
-
-
+Q1_primary_dem_rep_clean %>%
+  filter(total_votes == o)
 
 
 ```
@@ -143,7 +151,12 @@ Choose your own adventure: I want you to come up with a question you could ask o
 
 First write the question and then try to answer it by writing code. If you're not sure of the exact code at a minimum, describe what you think you'd have to do to answer it and what the results would look like.
 
+Answer: For this question, I would ask: What office was the one that recieved the highest voter turnout and in what county was this the highest? 
+
+To code this question, I would filter the office that recieved the highest turnout. I would then order them in descending order. Then I would group them by county name and see which one had the highest turnout. 
+
 ```{r}
+
 
 
 
