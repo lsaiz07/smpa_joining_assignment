@@ -41,7 +41,13 @@ primary_rep <- read_csv("data/md_primary_precinct_rep.csv") %>%
 
 Now Combine (stack) the two dataframes into one combined dataframe, so all the records from both tables are in one place to use.
 
+(primary_rep, by = c("County", "Election District - Precinct")) 
+
 ```{r}
+
+primary_dem_rep <- bind_rows(primary_dem, primary_rep)
+
+
 
 
 
@@ -60,7 +66,9 @@ To use clean_names() you apply it to your dataframe like:
 
 ```{r}
 
+primary_dem_rep_clean <- primary_dem_rep %>%
 
+clean_names()
 
 
 
@@ -79,7 +87,8 @@ Next use left_join() to join the two tables based on the unique combination of p
 `by = c("firstcolumn_table1" = "firstcolumn_table2", "secondcolumn_table1" = "secondcolumn_table2"))`
 
 ```{r}
-
+new_primary_dem_rep <- primary_dem_rep_clean %>%
+  left_join(precinct_voting_locations, by = c("county" = "county_code", "election_district_precinct" = "precinct_code"))
 
 
 
