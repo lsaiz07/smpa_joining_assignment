@@ -119,9 +119,18 @@ group_by(county, precinct_voting_locations, office_name == "Governor / Lt. Gover
 
 ```{r}
 
-Q1B_primary_dem_rep_clean <- Q1_primary_dem_rep_clean %>%
-  group_by(county, precinct_voting_locations, office_name) %>%
-  summarise(total_votes)
+Q1_data_set <- primary_dem_rep_clean %>%
+  left_join(precinct_voting_locations, by = c("county" = "county_code", "election_district_precinct" = "precinct_code"))
+
+
+Q1_primary_dem_rep_new <- Q1_data_set  %>% 
+group_by(county, election_district_precinct) %>%
+  filter(office_name == "Governor / Lt. Governor")%>% 
+  mutate(votes= early_votes + election_night_votes + mail_in_ballot_1_votes + provisional_votes + mail_in_ballot_2_votes) %>%
+  summarise(total_votes= sum(votes))
+
+Q1_primary_dem_rep_new
+
 
 
 ```
@@ -135,8 +144,8 @@ Let's look at the average number of votes in each party's primary race for gover
 ```{r}
 
 
-Q1_primary_dem_rep_clean %>%
-  filter(total_votes == o)
+Q1_primary_dem_rep_new %>%
+  filter(total_votes == 0)
 
 
 ```
@@ -151,13 +160,19 @@ Choose your own adventure: I want you to come up with a question you could ask o
 
 First write the question and then try to answer it by writing code. If you're not sure of the exact code at a minimum, describe what you think you'd have to do to answer it and what the results would look like.
 
-Answer: For this question, I would ask: What office was the one that recieved the highest voter turnout and in what county was this the highest? 
+Answer: For this question, I would ask what office recieved the highest number of votes and I would compare it with the other offices. 
 
-To code this question, I would filter the office that recieved the highest turnout. I would then order them in descending order. Then I would group them by county name and see which one had the highest turnout. 
+Answer to my question: The House of Delegates was the office that recieved the highest ammount of votes. 
 
 ```{r}
 
+Q1_primary_dem_rep_final <- Q1_data_set  %>% 
+group_by(office_name) %>%
+  mutate(votes= early_votes + election_night_votes + mail_in_ballot_1_votes + provisional_votes + mail_in_ballot_2_votes) %>%
+  summarise(total_votes= sum(votes)) %>%
+  arrange(desc(total_votes))
 
+Q1_primary_dem_rep_final
 
 
 
